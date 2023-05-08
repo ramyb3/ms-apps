@@ -2,11 +2,11 @@ import React from "react";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { legacy_createStore as createStore } from "redux";
 import { Provider } from "react-redux";
 import reducer from "./reducer";
-import { createRoot } from "react-dom/client";
 
 const appStore = createStore(reducer);
 const container = document.getElementById("root");

@@ -12,10 +12,12 @@ export default function App() {
 
   const imageType = ["", "Animals", "Sport", "Work", "Flowers"];
 
+  //only when app start
   useEffect(() => {
     getData(imageType[3]);
   }, []);
 
+  //func to get data from api
   const getData = async (type) => {
     try {
       const resp = await axios.post(`http://localhost:8000/${type}`);
@@ -27,6 +29,7 @@ export default function App() {
     }
   };
 
+  //func to get data from api when user changed image type
   const changeType = async (e) => {
     await getData(e.target.value);
 
@@ -37,62 +40,64 @@ export default function App() {
     }, 200);
   };
 
-  return (
-    <>
-      <div className="layout">
-        <button
-          onClick={() => {
-            if (numbers[0] > 0) {
-              setNumbers([numbers[0] - 9, numbers[1] - 9]);
-            }
-          }}
-        >
-          prev
-        </button>
-
-        <div className="center-column">
-          <button onClick={() => setDialog({ open: true, data: imageType })}>
-            choose type
+  if (storeData.length > 0) {
+    return (
+      <>
+        <div className="layout">
+          <button
+            onClick={() => {
+              //check if the array in starting position
+              if (numbers[0] > 0) {
+                setNumbers(numbers.map((num) => num - 9));
+              }
+            }}
+          >
+            Prev
           </button>
-          <div className="images">
-            {storeData.length > 0
-              ? storeData.slice(numbers[0], numbers[1]).map((item, index) => {
-                  return (
-                    <img
-                      alt=""
-                      key={index}
-                      src={item.webformatURL}
-                      onClick={() => setDialog({ open: true, data: item })}
-                    />
-                  );
-                })
-              : null}
+
+          <div className="center-column">
+            <button onClick={() => setDialog({ open: true, data: imageType })}>
+              Type
+            </button>
+            <div className="images">
+              {storeData?.slice(numbers[0], numbers[1])?.map((item, index) => {
+                return (
+                  <img
+                    alt=""
+                    key={index}
+                    src={item.webformatURL}
+                    onClick={() => setDialog({ open: true, data: item })}
+                  />
+                );
+              })}
+            </div>
           </div>
+
+          <button onClick={() => setNumbers(numbers.map((num) => num + 9))}>
+            Next
+          </button>
         </div>
 
-        <button onClick={() => setNumbers([numbers[0] + 9, numbers[1] + 9])}>
-          next
-        </button>
-      </div>
-
-      <Dialog
-        open={dialog.open}
-        onClose={() => setDialog({ open: false, data: [] })}
-        fullWidth
-      >
-        <div className="dialog">
-          <h2>
-            {Array.isArray(dialog.data) ? "Select Images Type" : "Image Data:"}
-          </h2>
-          {Array.isArray(dialog.data) ? (
-            <select onChange={changeType}>
-              {dialog.data.map((item, index) => {
-                return <option key={index}>{item}</option>;
-              })}
-            </select>
-          ) : (
-            <div>
-              {Object.keys(dialog.data).map((item, index) => {
+        <Dialog
+          open={dialog.open}
+          onClose={() => setDialog({ open: false, data: [] })}
+          fullWidth
+        >
+          <div className="dialog">
+            <h2>
+              {Array.isArray(dialog.data)
+                ? "Select Images Type"
+                : "Image Data:"}
+            </h2>
+            {Array.isArray(dialog.data) ? (
+              <select onChange={changeType}>
+                {dialog.data.map((item, index) => {
+                  return <option key={index}>{item}</option>;
+                })}
+              </select>
+            ) : (
+              Object.keys(dialog.data).map((item, index) => {
+                //show only "raw data" & without sites
                 if (
                   String(dialog.data[item]).includes("http") ||
                   String(dialog.data[item]) === ""
@@ -106,11 +111,11 @@ export default function App() {
                     {dialog.data[item]}
                   </div>
                 );
-              })}
-            </div>
-          )}
-        </div>
-      </Dialog>
-    </>
-  );
+              })
+            )}
+          </div>
+        </Dialog>
+      </>
+    );
+  }
 }
