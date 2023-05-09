@@ -31,6 +31,7 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 10px;
 }
 
 .images {
@@ -38,7 +39,7 @@ img {
   grid-template-columns: auto auto auto;
   gap: 50px;
   justify-content: center;
-  padding: 50px;
+  padding: 20px;
 }
 
 .dialog {
@@ -51,6 +52,12 @@ img {
   justify-content: space-between;
   border: 1px dashed #32a1ce;
   padding: 3px;
+}
+
+.page-num {
+  color: red;
+  font-weight: bold;
+  font-size: 18px;
 }
 
 @media (max-width: 1000px) {

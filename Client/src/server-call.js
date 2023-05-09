@@ -12,12 +12,20 @@ export default function reducer(state = [], action) {
 
 export const imageType = ["", "Animals", "Sport", "Work", "Flowers"];
 
-export function getData(CATEGORY) {
+export function getData(CATEGORY, sort) {
   return async function fetchData(dispatch, getState) {
     try {
-      const resp = await axios.post(`http://localhost:8000/${CATEGORY}`);
+      let resp;
 
-      dispatch({ type: "LOAD", payload: resp.data.hits });
+      if (sort) {
+        resp = await axios.post(
+          `http://localhost:8000/${CATEGORY}+${sort.toLowerCase()}`
+        );
+      } else {
+        resp = await axios.post(`http://localhost:8000/${CATEGORY}`);
+      }
+
+      dispatch({ type: "LOAD", payload: resp.data });
     } catch (e) {
       console.error(e);
       return [];

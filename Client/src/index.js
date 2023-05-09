@@ -8,7 +8,7 @@ import { Provider } from "react-redux";
 import { getData, imageType } from "./server-call";
 import store from "./reducer";
 
-store.dispatch(getData(imageType[3])); // set "work" as first type
+store.dispatch(getData(imageType[3], false)); // set "work" as first type
 
 const container = document.getElementById("root");
 const root = createRoot(container);

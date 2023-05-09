@@ -7,17 +7,25 @@ import store from "./reducer";
 
 export default function App() {
   const storeData = useSelector((state) => state);
-  const [dialog, setDialog] = useState({ open: false, data: [] });
+  const [dialog, setDialog] = useState({ open: false, data: [], method: "" });
   const [numbers, setNumbers] = useState([0, 9]);
+  const [category, setCategory] = useState(imageType[3]);
+
+  const sort = ["", "Views", "Downloads", "Likes", "Comments"];
 
   //func to get data from api when user changed image type
-  const changeType = async (e) => {
-    await store.dispatch(getData(e.target.value));
+  const changeType = async (e, method) => {
+    if (method === "type") {
+      await store.dispatch(getData(e.target.value, false));
+      setCategory(e.target.value);
+    } else {
+      await store.dispatch(getData(category, e.target.value));
+    }
 
-    setNumbers([0, 9]);
+    setNumbers([0, 9]); //first page
 
     setTimeout(() => {
-      setDialog({ open: false, data: [] });
+      setDialog({ open: false, data: [], method: "" });
     }, 200);
   };
 
@@ -36,17 +44,32 @@ export default function App() {
         </button>
 
         <div className="center-column">
-          <button onClick={() => setDialog({ open: true, data: imageType })}>
+          <button
+            onClick={() =>
+              setDialog({ open: true, data: imageType, method: "type" })
+            }
+          >
             Type
           </button>
+          <button
+            onClick={() =>
+              setDialog({ open: true, data: sort, method: "sort" })
+            }
+          >
+            Sort by
+          </button>
+          <div className="page-num">PAGE {numbers[1] / 9}</div>
           <div className="images">
+            {/* show only first 9 images */}
             {storeData.slice(numbers[0], numbers[1])?.map((item, index) => {
               return (
                 <img
                   alt=""
                   key={index}
                   src={item.webformatURL}
-                  onClick={() => setDialog({ open: true, data: item })}
+                  onClick={() =>
+                    setDialog({ open: true, data: item, method: "image" })
+                  }
                 />
               );
             })}
@@ -60,15 +83,17 @@ export default function App() {
 
       <Dialog
         open={dialog.open}
-        onClose={() => setDialog({ open: false, data: [] })}
+        onClose={() => setDialog({ open: false, data: [], method: "" })}
         fullWidth
       >
         <div className="dialog">
           <h2>
-            {Array.isArray(dialog.data) ? "Select Images Type" : "Image Data:"}
+            {dialog.method === "image"
+              ? "Image Data:"
+              : `Select ${dialog.method === "sort" ? "Sort" : "Images"} Type`}
           </h2>
-          {Array.isArray(dialog.data) ? (
-            <select onChange={changeType}>
+          {dialog.method === "sort" || dialog.method === "type" ? (
+            <select onChange={(e) => changeType(e, dialog.method)}>
               {dialog.data.map((item, index) => {
                 return <option key={index}>{item}</option>;
               })}
