@@ -4,17 +4,18 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import { legacy_createStore as createStore } from "redux";
 import { Provider } from "react-redux";
-import reducer from "./reducer";
+import { getData, imageType } from "./server-call";
+import store from "./reducer";
 
-const appStore = createStore(reducer);
+store.dispatch(getData(imageType[3])); // set "work" as first type
+
 const container = document.getElementById("root");
 const root = createRoot(container);
 
 root.render(
   <BrowserRouter>
-    <Provider store={appStore}>
+    <Provider store={store}>
       <App />
     </Provider>
   </BrowserRouter>
