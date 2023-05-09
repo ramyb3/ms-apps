@@ -86,13 +86,8 @@ img {
 }
 
 @media (max-width: 500px) {
-  img {
-    width: 100px;
-    height: 100px;
-  }
-
   .images {
-    grid-template-columns: none;
-    grid-template-rows: none;
+    padding: 0;
+    gap: 10px;
   }
 }
