@@ -29,6 +29,10 @@ export default function App() {
     }, 200);
   };
 
+  if (storeData.length === 0) {
+    return <div style={{ textAlign: "center" }}>Loading...</div>;
+  }
+
   return (
     <>
       <div className="layout">
