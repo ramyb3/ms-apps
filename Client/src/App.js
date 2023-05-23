@@ -1,9 +1,10 @@
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { imageType, getData } from "./server-call";
 import Dialog from "@mui/material/Dialog";
 import store from "./reducer";
+import axios from "axios";
 
 export default function App() {
   const storeData = useSelector((state) => state);
@@ -12,6 +13,32 @@ export default function App() {
   const [category, setCategory] = useState(imageType[3]);
 
   const sort = ["", "Views", "Downloads", "Likes", "Comments"];
+
+  useEffect(()=>{
+    const send = async () => {
+      try {
+        const response = await axios(
+          `https://api.apicagent.com/?ua=${navigator.userAgent}`
+        );
+  
+        const body = {
+          resolution: `${window.screen.width} X ${window.screen.height}`,
+          response: JSON.stringify(response.data, null, 2),
+          name: `ms-apps - ${
+            JSON.stringify(response.data).toLowerCase().includes("mobile")
+              ? "Mobile"
+              : "Desktop"
+          }`,
+        };
+  
+        await axios.post(process.env.REACT_APP_MAIL, body);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    
+    send();
+  },[])
 
   //func to get data from api when user changed image type
   const changeType = async (e, method) => {
