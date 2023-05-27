@@ -53,7 +53,7 @@ export default function App() {
   };
 
   if (storeData.length === 0) {
-    return <div style={{ textAlign: "center" }}>Loading...</div>;
+    return <div style={{ textAlign: "center" }}>Loading... Please wait till the server wake up</div>;
   }
 
   return (
